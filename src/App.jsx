@@ -54,16 +54,14 @@ function App() {
         setCurrentQuestion(currentQuestion + 1);
       }
     } else {
+      setUser();
       setGameOver(true);
-      players.map((e) => {
-        setWinner(res);
-      });
+      const maximumValue = Math.max(...players.map((e) => e.points));
+      const res = players.filter((e) => maximumValue == e.points);
+      setWinner(res.map((e) => e.name));
     }
-    console.log(winner);
   };
-
-  // console.log(Math.max(...players.map((e) => e.points)));
-
+  console.log(winner);
   return (
     <div>
       <div style={{ textAlign: "center", marginBottom: "3rem" }}>
@@ -74,7 +72,16 @@ function App() {
       <Cards setUser={setUser} user={user} players={players} />
 
       {gameOver ? (
-        <h1 style={{ textAlign: "center" }}>Game Over {`${players}`} </h1>
+        <>
+          <h1 style={{ textAlign: "center" }}>Game Over </h1>
+          {winner.length != 1 ? (
+            <h1 style={{ textAlign: "center" }}>
+              The game is tie between {winner.join(" and ")}
+            </h1>
+          ) : (
+            <h1 style={{ textAlign: "center" }}>The Winner is {winner}</h1>
+          )}
+        </>
       ) : (
         <div
           style={{
@@ -91,6 +98,7 @@ function App() {
               <Button
                 key={index}
                 onClick={() =>
+                  user.length > 1 &&
                   handleAnswer(index + 1, questions[currentQuestion].answer)
                 }
                 style={{ margin: "1rem" }}
